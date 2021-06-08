@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 
@@ -24,7 +25,7 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @GetMapping("/file/{id}")
+    @GetMapping("/home/file/{id}")
     public ResponseEntity<Resource> downloadFile(@PathVariable("id") int id) {
         File file = fileService.getFile(id);
 
@@ -43,9 +44,9 @@ public class FileController {
     }
 
 
-    @PostMapping("/file-upload")
+    @PostMapping("/home/file-upload")
     public String handleFileUpload(@RequestParam("fileUpload") MultipartFile fileUpload,
-                                   Authentication authentication, Model model) throws IOException {
+                                   Authentication authentication, Model model, RedirectAttributes redirectAttributes) throws IOException {
 
         String errorMsg = null;
         String successMsg = null;
@@ -70,18 +71,18 @@ public class FileController {
         if(errorMsg == null) {
             model.addAttribute("files", fileService.getUserFiles(username));
             successMsg = "Successfully uploaded the file.";
-            model.addAttribute("success", true);
-            model.addAttribute("successMsg", successMsg);
+            redirectAttributes.addFlashAttribute("success", true);
+            redirectAttributes.addFlashAttribute("successMsg", successMsg);
         }
         else {
-            model.addAttribute("errorMsg", errorMsg);
+            redirectAttributes.addFlashAttribute("errorMsg", errorMsg);
         }
-
-        return "result";
+        return "redirect:/result";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteFile(@PathVariable("id") int id, Authentication authentication, Model model) {
+    @GetMapping("/home/delete/{id}")
+    public String deleteFile(@PathVariable("id") int id, Authentication authentication,
+                             Model model, RedirectAttributes redirectAttributes) {
         String errorMsg = null;
         String successMsg;
 
@@ -89,15 +90,15 @@ public class FileController {
 
         if(fileService.deleteFile(id) < 1) {
             errorMsg = "An error occurred while deleting file. Please try again.";
-            model.addAttribute("errorMsg", errorMsg);
+            redirectAttributes.addFlashAttribute("errorMsg", errorMsg);
         }
         else {
             model.addAttribute("files", fileService.getUserFiles(authentication.getName()));
             successMsg = "Successfully deleted file " + deletedFile.getFileName();
-            model.addAttribute("success", true);
-            model.addAttribute("successMsg", successMsg);
+            redirectAttributes.addFlashAttribute("success", true);
+            redirectAttributes.addFlashAttribute("successMsg", successMsg);
         }
 
-        return "result";
+        return "redirect:/result";
     }
 }
