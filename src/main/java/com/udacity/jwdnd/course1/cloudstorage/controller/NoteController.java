@@ -1,11 +1,15 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
+import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
+import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -18,23 +22,54 @@ public class NoteController {
         this.noteService = noteService;
     }
 
-    @PostMapping("/home/post-note")
-    public String postNote(@ModelAttribute("note") Note note, Authentication authentication,
+    @PostMapping("/home/post/note")
+    public String postNote(@ModelAttribute("noteForm") NoteForm noteForm, Authentication authentication,
                            Model model, RedirectAttributes redirectAttributes) {
+        String errorMsg = null;
+        String successMsg = null;
+
+        Note noteInDb = noteService.getNoteWithId(noteForm.getNoteId());
+
+        if(noteInDb != null) {
+            int rowsUpdated = noteService.updateNote(noteForm);
+            errorMsg = rowsUpdated < 1 ? "An error occurred while updating note. Please try again." : null;
+            successMsg = rowsUpdated >= 1 ? "Successfully updated note." : null;
+        }
+        else {
+            int noteId = noteService.postNote(noteForm, authentication.getName());
+            errorMsg = noteId < 1 ? "An error occurred while posting note. Please try again." : null;
+            successMsg = noteId >= 1 ? "Successfully posted note." : null;
+        }
+
+        if(errorMsg == null) {
+            model.addAttribute("notes", noteService.getUserNotes(authentication.getName()));
+            redirectAttributes.addFlashAttribute("success", true);
+            redirectAttributes.addFlashAttribute("successMsg", successMsg);
+        }
+        else {
+            redirectAttributes.addFlashAttribute("errorMsg", errorMsg);
+        }
+        return "redirect:/result";
+    }
+
+    @GetMapping("/home/note/delete/{id}")
+    public String deleteNote(@PathVariable("id") int id, Authentication authentication,
+                             Model model, RedirectAttributes redirectAttributes) {
         String errorMsg = null;
         String successMsg;
 
-        if(noteService.postNote(note, authentication.getName()) < 0) {
-            errorMsg = "An error occurred while posting note. Please try again.";
+        Note deletedNote = noteService.getNoteWithId(id);
+
+        if(noteService.deleteNote(id) < 1) {
+            errorMsg = "An error occurred while deleting note. Please try again.";
             redirectAttributes.addFlashAttribute("errorMsg", errorMsg);
         }
         else {
             model.addAttribute("notes", noteService.getUserNotes(authentication.getName()));
-            successMsg = "Successfully posted note.";
+            successMsg = "Successfully deleted note: " + deletedNote.getNoteTitle();
             redirectAttributes.addFlashAttribute("success", true);
             redirectAttributes.addFlashAttribute("successMsg", successMsg);
         }
-
         return "redirect:/result";
     }
 }

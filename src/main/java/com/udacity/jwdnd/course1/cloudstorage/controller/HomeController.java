@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
+import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import org.springframework.security.core.Authentication;
@@ -19,7 +20,7 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String getHomePage(Authentication authentication, Model model) {
+    public String getHomePage(@ModelAttribute("noteForm") NoteForm noteForm, Authentication authentication, Model model) {
         String username = authentication.getName();
         model.addAttribute("files", fileService.getUserFiles(username));
         model.addAttribute("notes", noteService.getUserNotes(username));

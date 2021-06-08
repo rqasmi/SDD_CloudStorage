@@ -98,7 +98,6 @@ public class FileController {
             redirectAttributes.addFlashAttribute("success", true);
             redirectAttributes.addFlashAttribute("successMsg", successMsg);
         }
-
         return "redirect:/result";
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:ath="http://www.w3.org/1999/html">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -77,10 +78,15 @@
                                 <tbody>
                                     <tr th:each="note : ${notes}">
                                         <td>
-                                            <button type="button" class="btn btn-success">
+                                            <button type="button"
+                                                    th:data-id="${note.noteId}"
+                                                    th:data-title="${note.noteTitle}"
+                                                    th:data-description="${note.noteDescription}"
+                                                    onclick="showNoteModal(this.getAttribute('data-id'),this.getAttribute('data-title'), this.getAttribute('data-description'))"
+                                                    class="btn btn-success">
                                                 Edit
                                             </button>
-                                            <a class="btn btn-danger">Delete</a>
+                                            <a th:href="@{/home/note/delete/{id}(id=${note.noteId})}" class="btn btn-danger">Delete</a>
                                         </td>
                                         <th th:text="${note.noteTitle}" scope="row">Example Note Title</th>
                                         <td th:text="${note.noteDescription}">Example Note Description </td>
@@ -99,8 +105,8 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:action="@{/home/post-note}" th:object="${note}" method="POST">
-                                            <input type="hidden" name="noteId" id="note-id">
+                                        <form action="#" th:object="${noteForm}" method="POST" th:action="@{'/home/post/note'}">
+                                            <input type="hidden" th:field="*{noteId}" name="noteId" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
                                                 <input type="text" th:field="*{noteTitle}" name= "noteTitle" class="form-control" id="note-title" maxlength="20" required>
