@@ -42,14 +42,10 @@ public class CredentialService {
         return credentialMapper.deleteCredential(id);
     }
 
-    public Credential getDecryptedCredential(Credential credential) {
-        Credential credentialInDb = credentialMapper.getCredentialWithId(credential.getCredentialId());
-        if(credentialInDb != null) {
-            return new Credential(credentialInDb.getCredentialId(), credentialInDb.getUrl(), credentialInDb.getUsername(),
-                                  credentialInDb.getKey(), encryptionService.decryptValue(credentialInDb.getPassword(), credentialInDb.getKey()),
-                                  credentialInDb.getUserId());
-        }
-        return null;
+    public int updateCredential(Credential credential) {
+        String encodedKey = generateSecretKey();
+        String encryptedPassword = encryptionService.encryptValue(credential.getPassword(), encodedKey);
+        return credentialMapper.updateCredential(new Credential(credential.getCredentialId(), credential.getUrl(), credential.getUsername(), encodedKey, encryptedPassword, null));
     }
 
     private String generateSecretKey() {

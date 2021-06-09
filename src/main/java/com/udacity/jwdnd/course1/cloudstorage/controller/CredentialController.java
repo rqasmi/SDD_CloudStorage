@@ -27,12 +27,22 @@ public class CredentialController {
         String errorMsg;
         String successMsg;
 
-        int credentialId = credentialService.createCredential(credential, authentication.getName());
-        errorMsg = credentialId  < 1 ? "An error occurred while creating credential. Please try again." : null;
+        Credential credentialInDb = credentialService.getCredentialWithId(credential.getCredentialId());
+
+        if(credentialInDb != null) {
+            int rowsUpdated = credentialService.updateCredential(credential);
+            errorMsg = rowsUpdated < 1 ? "An error occurred while updating credential. Please try again." : null;
+            successMsg = rowsUpdated >= 1 ? "Successfully updated credential." : null;
+        }
+        else {
+            int credentialId = credentialService.createCredential(credential, authentication.getName());
+            errorMsg = credentialId  < 1 ? "An error occurred while adding credential. Please try again." : null;
+            successMsg = credentialId >= 1 ? "Successfully added credential." : null;
+        }
 
         if(errorMsg == null) {
             model.addAttribute("userCredentials", credentialService.getUserCredentials(authentication.getName()));
-            successMsg = "Successfully created credential.";
+//            successMsg = "Successfully created credential.";
             redirectAttributes.addFlashAttribute("success", true);
             redirectAttributes.addFlashAttribute("successMsg", successMsg);
         }
@@ -84,9 +94,4 @@ public class CredentialController {
         }
         return "redirect:/result";
     }
-
-//    @ModelAttribute("credentials")
-//    public Credential getDecryptedCredential(@ModelAttribute("credential") Credential credential) {
-//        return credentialService.getDecryptedCredential(credential);
-//    }
 }
