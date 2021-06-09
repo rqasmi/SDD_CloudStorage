@@ -146,11 +146,7 @@
                                     <td>
                                         <button type="button"
                                                 class="btn btn-success"
-                                                th:data-id="${credential.credentialId}"
-                                                th:data-url="${credential.url}"
-                                                th:data-username="${credential.username}"
-                                                th:data-password="${credential.password}"
-                                                onclick="showCredentialModal(this.getAttribute('data-id'),this.getAttribute('data-url'), this.getAttribute('data-username'), this.getAttribute('data-password'))"
+                                                onclick="javascript:showCredentialModal([[${credential.credentialId}]], [[${credential.url}]], [[${credential.username}]], [[${encryptionService.decryptValue(credential.password, credential.key)}]])"
                                         >
                                             Edit
                                         </button>
