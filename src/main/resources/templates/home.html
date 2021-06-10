@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:ath="http://www.w3.org/1999/html">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -146,6 +145,10 @@
                                     <td>
                                         <button type="button"
                                                 class="btn btn-success"
+                                                th:data-id="${credential.credentialId}"
+                                                th:data-url="${credential.url}"
+                                                th:data-username="${credential.username}"
+                                                th:data-decryptedPassword="${encryptionService.decryptValue(credential.password, credential.key)}"
                                                 th:onclick="javascript: showCredentialModal([[${credential.credentialId}]], [[${credential.url}]], [[${credential.username}]], [[${encryptionService.decryptValue(credential.password, credential.key)}]])"
                                         >
                                             Edit

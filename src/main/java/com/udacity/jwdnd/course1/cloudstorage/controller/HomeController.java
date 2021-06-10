@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class HomeController {
 
-    private final FileService fileService;
-    private final NoteService noteService;
-    private final CredentialService credentialService;
-    private final EncryptionService encryptionService;
+    private FileService fileService;
+    private NoteService noteService;
+    private CredentialService credentialService;
+    private EncryptionService encryptionService;
 
     public HomeController(FileService fileService, NoteService noteService, CredentialService credentialService, EncryptionService encryptionService) {
         this.fileService = fileService;
@@ -30,7 +30,7 @@ public class HomeController {
     public String getHomePage(@ModelAttribute("noteForm") NoteForm noteForm, @ModelAttribute("credential") Credential credential,
                               Authentication authentication, Model model) {
         String username = authentication.getName();
-        model.addAttribute("encryptionService",encryptionService);
+        model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("files", fileService.getUserFiles(username));
         model.addAttribute("notes", noteService.getUserNotes(username));
         model.addAttribute("userCredentials", credentialService.getUserCredentials(username));

@@ -42,35 +42,12 @@ public class CredentialController {
 
         if(errorMsg == null) {
             model.addAttribute("userCredentials", credentialService.getUserCredentials(authentication.getName()));
-//            successMsg = "Successfully created credential.";
             redirectAttributes.addFlashAttribute("success", true);
             redirectAttributes.addFlashAttribute("successMsg", successMsg);
         }
         else {
             redirectAttributes.addFlashAttribute("errorMsg", errorMsg);
         }
-
-//        Note noteInDb = noteService.getNoteWithId(noteForm.getNoteId());
-//
-//        if(noteInDb != null) {
-//            int rowsUpdated = noteService.updateNote(noteForm);
-//            errorMsg = rowsUpdated < 1 ? "An error occurred while updating note. Please try again." : null;
-//            successMsg = rowsUpdated >= 1 ? "Successfully updated note." : null;
-//        }
-//        else {
-//            int noteId = noteService.postNote(noteForm, authentication.getName());
-//            errorMsg = noteId < 1 ? "An error occurred while posting note. Please try again." : null;
-//            successMsg = noteId >= 1 ? "Successfully posted note." : null;
-//        }
-//
-//        if(errorMsg == null) {
-//            model.addAttribute("notes", noteService.getUserNotes(authentication.getName()));
-//            redirectAttributes.addFlashAttribute("success", true);
-//            redirectAttributes.addFlashAttribute("successMsg", successMsg);
-//        }
-//        else {
-//            redirectAttributes.addFlashAttribute("errorMsg", errorMsg);
-//        }
         return "redirect:/result";
     }
 
