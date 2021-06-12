@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +18,15 @@ class CloudStorageApplicationTests {
 	private static final String USERNAME = "ragheed";
 	private static final String PASSWORD = "12345";
 	private static final String NOTE_TITLE = "To do list";
+	private static final String NOTE_TITLE_EDITED = "To do list for cloud";
 	private static final String NOTE_DESCRIPTION = "Review code";
+	private static final String NOTE_DESCRIPTION_EDITED = "Review code and merge pull request";
+	private static final String URL = "https://amazon.com/login";
+	private static final String CRED_USERNAME = "ragheed";
+	private static final String CRED_PASSWORD = "amz2312";
+	private static final String URL_EDITED = "https://facebook.com/login";
+	private static final String CRED_USERNAME_EDITED = "rag";
+	private static final String CRED_PASSWORD_EDITED = "fcb3412";
 
 	private LoginPage loginPage;
 	private SignupPage signupPage;
@@ -74,16 +83,14 @@ class CloudStorageApplicationTests {
 	public void testSignupAndLogin(){
 		driver.get(baseURL + "/signup");
 		signupPage = new SignupPage(driver);
-
 		signupPage.signup(FIRST_NAME, LAST_NAME, USERNAME, PASSWORD);
+		signupPage.navigateToLogin();
 
-		driver.get(baseURL + "/login");
 		loginPage = new LoginPage(driver);
-
 		loginPage.login(USERNAME, PASSWORD);
 
-		assertEquals(baseURL + "/home", driver.getCurrentUrl());
 		homePage = new HomePage(driver);
+		assertEquals(baseURL + "/home", driver.getCurrentUrl());
 		assertNotNull(homePage.getLogoutBtn());
 		assertNotNull(homePage.getNavCredentialsTab());
 		assertNotNull(homePage.getNavFilesTab());
@@ -95,27 +102,162 @@ class CloudStorageApplicationTests {
 
 	@Test
 	public void testCreateNote() {
-		driver.get(baseURL + "/signup");
-		signupPage = new SignupPage(driver);
-		signupPage.signup(FIRST_NAME, LAST_NAME, USERNAME, PASSWORD);
-		signupPage.navigateToLogin();
+		try {
+			driver.get(baseURL + "/signup");
+			signupPage = new SignupPage(driver);
+			signupPage.signup(FIRST_NAME, LAST_NAME, USERNAME, PASSWORD);
+			signupPage.navigateToLogin();
 
-		loginPage = new LoginPage(driver);
-		loginPage.login(USERNAME, PASSWORD);
+			loginPage = new LoginPage(driver);
+			loginPage.login(USERNAME, PASSWORD);
 
-		homePage = new HomePage(driver);
-		homePage.createNote(NOTE_TITLE, NOTE_DESCRIPTION);
+			homePage = new HomePage(driver);
+			homePage.createNote(NOTE_TITLE, NOTE_DESCRIPTION);
 
-		resultPage = new ResultPage(driver);
-		try { Thread.sleep(2000); } catch (InterruptedException e) {}
-		assertEquals("Successfully posted note.", resultPage.getSuccessMessage());
-		resultPage.navigateToHomePage();
-		try { Thread.sleep(2000); } catch (InterruptedException e) {}
-		homePage.navigateToNotes();
-		try { Thread.sleep(2000); } catch (InterruptedException e) {}
+			resultPage = new ResultPage(driver);
+			Thread.sleep(2000);
+			assertEquals("Successfully posted note.", resultPage.getSuccessMessage());
+			resultPage.navigateToHomePage();
+			Thread.sleep(2000);
+			homePage.navigateToNotes();
+			Thread.sleep(2000);
 
-		assertEquals(NOTE_TITLE, homePage.getNoteTitleText());
-		assertEquals(NOTE_DESCRIPTION, homePage.getNoteDescriptionText());
+			assertEquals(NOTE_TITLE, homePage.getNoteTitleText());
+			assertEquals(NOTE_DESCRIPTION, homePage.getNoteDescriptionText());
+
+		} catch (InterruptedException e) {}
+	}
+
+	@Test
+	public void testEditNote() {
+		try {
+			driver.get(baseURL + "/signup");
+			signupPage = new SignupPage(driver);
+			signupPage.signup(FIRST_NAME, LAST_NAME, USERNAME, PASSWORD);
+			signupPage.navigateToLogin();
+
+			loginPage = new LoginPage(driver);
+			loginPage.login(USERNAME, PASSWORD);
+
+			homePage = new HomePage(driver);
+			homePage.createNote(NOTE_TITLE, NOTE_DESCRIPTION);
+
+			resultPage = new ResultPage(driver);
+			resultPage.navigateToHomePage();
+			Thread.sleep(2000);
+			homePage.editNote(NOTE_TITLE_EDITED, NOTE_DESCRIPTION_EDITED);
+			Thread.sleep(2000);
+
+			assertEquals("Successfully updated note.", resultPage.getSuccessMessage());
+			resultPage.navigateToHomePage();
+			Thread.sleep(2000);
+			homePage.navigateToNotes();
+			Thread.sleep(2000);
+
+			assertEquals(NOTE_TITLE_EDITED, homePage.getNoteTitleText());
+			assertEquals(NOTE_DESCRIPTION_EDITED, homePage.getNoteDescriptionText());
+
+		} catch (InterruptedException e) {}
+	}
+
+	@Test
+	public void testDeleteNote() {
+		try {
+			driver.get(baseURL + "/signup");
+			signupPage = new SignupPage(driver);
+			signupPage.signup(FIRST_NAME, LAST_NAME, USERNAME, PASSWORD);
+			signupPage.navigateToLogin();
+
+			loginPage = new LoginPage(driver);
+			loginPage.login(USERNAME, PASSWORD);
+
+			homePage = new HomePage(driver);
+			homePage.createNote(NOTE_TITLE, NOTE_DESCRIPTION);
+
+			resultPage = new ResultPage(driver);
+			resultPage.navigateToHomePage();
+			Thread.sleep(2000);
+
+			homePage.deleteNote();
+
+			assertEquals("Successfully deleted note: " + NOTE_TITLE, resultPage.getSuccessMessage());
+			Thread.sleep(2000);
+			resultPage.navigateToHomePage();
+			homePage = new HomePage(driver);
+			Thread.sleep(2000);
+			homePage.navigateToNotes();
+			Thread.sleep(2000);
+
+			assertThrows(NoSuchElementException.class, () -> homePage.getNoteTitleText());
+			assertThrows(NoSuchElementException.class, () -> homePage.getNoteDescriptionText());
+
+		} catch (InterruptedException e) {}
+	}
+
+	@Test
+	public void testAddCredential() {
+		try {
+			driver.get(baseURL + "/signup");
+			signupPage = new SignupPage(driver);
+			signupPage.signup(FIRST_NAME, LAST_NAME, USERNAME, PASSWORD);
+			signupPage.navigateToLogin();
+
+			loginPage = new LoginPage(driver);
+			loginPage.login(USERNAME, PASSWORD);
+
+			homePage = new HomePage(driver);
+			homePage.addCredential(URL, CRED_USERNAME, CRED_PASSWORD);
+
+			resultPage = new ResultPage(driver);
+			Thread.sleep(2000);
+			assertEquals("Successfully added credential.", resultPage.getSuccessMessage());
+			resultPage.navigateToHomePage();
+			Thread.sleep(2000);
+			homePage.navigateToCredentials();
+			Thread.sleep(2000);
+
+			assertEquals(URL, homePage.getCredentialUrlText());
+			assertEquals(CRED_USERNAME, homePage.getCredentialUsernameText());
+			assertFalse(homePage.getCredentialPasswordText().isEmpty());
+			assertNotEquals(CRED_PASSWORD, homePage.getCredentialPasswordText());
+
+		} catch (InterruptedException e) {}
+	}
+
+	@Test
+	public void testViewAndEditCredential() {
+		try {
+			driver.get(baseURL + "/signup");
+			signupPage = new SignupPage(driver);
+			signupPage.signup(FIRST_NAME, LAST_NAME, USERNAME, PASSWORD);
+			signupPage.navigateToLogin();
+
+			loginPage = new LoginPage(driver);
+			loginPage.login(USERNAME, PASSWORD);
+
+			homePage = new HomePage(driver);
+			homePage.addCredential(URL, CRED_USERNAME, CRED_PASSWORD);
+
+			resultPage = new ResultPage(driver);
+			resultPage.navigateToHomePage();
+			Thread.sleep(2000);
+
+			homePage.viewEditCredentialModal();
+			assertEquals(CRED_PASSWORD, homePage.getCredentialPasswordInputText());
+			homePage.editCredential(URL_EDITED, CRED_USERNAME_EDITED, CRED_PASSWORD_EDITED);
+			Thread.sleep(2000);
+
+			assertEquals("Successfully updated credential.", resultPage.getSuccessMessage());
+			resultPage.navigateToHomePage();
+			Thread.sleep(2000);
+
+			homePage.navigateToCredentials();
+			Thread.sleep(2000);
+
+			assertEquals(URL_EDITED, homePage.getCredentialUrlText());
+			assertEquals(CRED_USERNAME_EDITED, homePage.getCredentialUsernameText());
+
+		} catch (InterruptedException e) {}
 	}
 
 }
