@@ -10,9 +10,6 @@ public class HomePage {
     @FindBy(css = "#logout-btn")
     private WebElement logoutBtn;
 
-    @FindBy(css = "#nav-tab")
-    private WebElement navTab;
-
     @FindBy(css = "#nav-files-tab")
     private WebElement navFilesTab;
 
@@ -92,10 +89,6 @@ public class HomePage {
         return logoutBtn;
     }
 
-    public WebElement getNavTab() {
-        return navTab;
-    }
-
     public WebElement getNavFilesTab() {
         return navFilesTab;
     }
@@ -115,9 +108,9 @@ public class HomePage {
     public void createNote(String noteTitle, String noteDescription) {
         try {
             navigateToNotes();
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             addNoteBtn.click();
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             noteTitleInput.sendKeys(noteTitle);
             noteDescriptionInput.sendKeys(noteDescription);
             noteModalSaveBtn.click();
@@ -127,9 +120,9 @@ public class HomePage {
     public void editNote(String noteTitle, String noteDescription) {
         try {
             navigateToNotes();
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             editNoteBtn.click();
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             noteTitleInput.clear();
             noteTitleInput.sendKeys(noteTitle);
             noteDescriptionInput.clear();
@@ -141,7 +134,7 @@ public class HomePage {
     public void deleteNote() {
         try {
             navigateToNotes();
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             deleteNoteBtn.click();
         } catch (InterruptedException e) {}
     }
@@ -163,9 +156,9 @@ public class HomePage {
     public void addCredential(String url, String username, String password) {
         try {
             navigateToCredentials();
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             addCredentialBtn.click();
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             credUrlInput.sendKeys(url);
             credUsernameInput.sendKeys(username);
             credPasswordInput.sendKeys(password);
@@ -176,9 +169,9 @@ public class HomePage {
     public void viewEditCredentialModal() {
         try {
             navigateToCredentials();
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             editCredBtn.click();
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {}
     }
 
@@ -190,6 +183,14 @@ public class HomePage {
         credPasswordInput.clear();
         credPasswordInput.sendKeys(password);
         credSaveBtn.click();
+    }
+
+    public void deleteCredential() {
+        try {
+            navigateToCredentials();
+            Thread.sleep(1000);
+            deleteCredBtn.click();
+        } catch (InterruptedException e) {}
     }
 
     public void navigateToCredentials() {
