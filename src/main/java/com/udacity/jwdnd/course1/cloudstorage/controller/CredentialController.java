@@ -1,8 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
-import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.services.MessageService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,9 +16,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CredentialController {
 
     private CredentialService credentialService;
+    private MessageService messageService;
 
-    public CredentialController(CredentialService credentialService) {
+    public CredentialController(CredentialService credentialService, MessageService messageService) {
         this.credentialService = credentialService;
+        this.messageService = messageService;
     }
 
     @PostMapping("/home/credential")
@@ -31,13 +33,13 @@ public class CredentialController {
 
         if(credentialInDb != null) {
             int rowsUpdated = credentialService.updateCredential(credential);
-            errorMsg = rowsUpdated < 1 ? "An error occurred while updating credential. Please try again." : null;
-            successMsg = rowsUpdated >= 1 ? "Successfully updated credential." : null;
+            errorMsg = rowsUpdated < 1 ? messageService.getCredentialUpdateError() : null;
+            successMsg = rowsUpdated >= 1 ? messageService.getCredentialUpdateSuccess() : null;
         }
         else {
             int credentialId = credentialService.createCredential(credential, authentication.getName());
-            errorMsg = credentialId  < 1 ? "An error occurred while adding credential. Please try again." : null;
-            successMsg = credentialId >= 1 ? "Successfully added credential." : null;
+            errorMsg = credentialId  < 1 ? messageService.getCredentialAddError() : null;
+            successMsg = credentialId >= 1 ? messageService.getCredentialAddSuccess() : null;
         }
 
         if(errorMsg == null) {
@@ -60,12 +62,12 @@ public class CredentialController {
         Credential deletedCredential = credentialService.getCredentialWithId(id);
 
         if(credentialService.deleteCredential(id) < 1) {
-            errorMsg = "An error occurred while deleting credential. Please try again.";
+            errorMsg = messageService.getCredentialDeleteError();
             redirectAttributes.addFlashAttribute("errorMsg", errorMsg);
         }
         else {
             model.addAttribute("credentials", credentialService.getUserCredentials(authentication.getName()));
-            successMsg = "Successfully deleted credential for " + deletedCredential.getUrl() + " and username " + deletedCredential.getUsername();
+            successMsg = messageService.getCredentialDeletionSuccess(deletedCredential.getUrl(), deletedCredential.getUsername());
             redirectAttributes.addFlashAttribute("success", true);
             redirectAttributes.addFlashAttribute("successMsg", successMsg);
         }

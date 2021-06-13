@@ -2,7 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
-import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
+import com.udacity.jwdnd.course1.cloudstorage.services.MessageService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ByteArrayResource;
@@ -21,10 +20,12 @@ import java.io.IOException;
 @Controller
 public class FileController {
 
-    protected final FileService fileService;
+    private FileService fileService;
+    private MessageService messageService;
 
-    public FileController(FileService fileService) {
+    public FileController(FileService fileService, MessageService messageService) {
         this.fileService = fileService;
+        this.messageService = messageService;
     }
 
     @GetMapping("/home/file/{id}")
@@ -56,27 +57,27 @@ public class FileController {
         String username = authentication.getName();
 
         if (fileUpload.isEmpty()) {
-            errorMsg = "Please select a file to upload.";
+            errorMsg = messageService.getEmptyFileError();
         }
 
         if(!fileService.isFileNameAvailable(fileUpload.getOriginalFilename())) {
-            errorMsg = "A file with the given name already exists.";
+            errorMsg = messageService.getExistingFileNameError();
         }
 
         if(fileUpload.getSize() > 10485760) {
-            errorMsg = "File size exceeded allowable 10MB. Try uploading a smaller file.";
+            errorMsg = messageService.getExceededFileSizeError();
         }
 
         if(errorMsg == null) {
             int rowsAdded = fileService.uploadFile(fileUpload, username);
             if(rowsAdded < 0) {
-                errorMsg = "An error occurred while uploading the file. Please try again.";
+                errorMsg = messageService.getFileUploadError();
             }
         }
 
         if(errorMsg == null) {
             model.addAttribute("files", fileService.getUserFiles(username));
-            successMsg = "Successfully uploaded the file.";
+            successMsg = messageService.getFileUploadSuccess();
             redirectAttributes.addFlashAttribute("success", true);
             redirectAttributes.addFlashAttribute("successMsg", successMsg);
         }
@@ -95,12 +96,12 @@ public class FileController {
         File deletedFile = fileService.getFile(id);
 
         if(fileService.deleteFile(id) < 1) {
-            errorMsg = "An error occurred while deleting file. Please try again.";
+            errorMsg = messageService.getFileDeleteError();
             redirectAttributes.addFlashAttribute("errorMsg", errorMsg);
         }
         else {
             model.addAttribute("files", fileService.getUserFiles(authentication.getName()));
-            successMsg = "Successfully deleted file " + deletedFile.getFileName();
+            successMsg = messageService.getFileDeletionSuccess() + " " + deletedFile.getFileName();
             redirectAttributes.addFlashAttribute("success", true);
             redirectAttributes.addFlashAttribute("successMsg", successMsg);
         }

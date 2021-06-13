@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import com.udacity.jwdnd.course1.cloudstorage.services.MessageService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,10 +15,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/signup")
 public class SignupController {
 
-    private final UserService userService;
+    private UserService userService;
+    private MessageService messageService;
 
-    public SignupController(UserService userService) {
+    public SignupController(UserService userService, MessageService messageService) {
         this.userService = userService;
+        this.messageService = messageService;
     }
 
     @GetMapping()
@@ -30,13 +33,13 @@ public class SignupController {
         String signupError = null;
 
         if(!userService.isUsernameAvailable(user.getUsername())) {
-            signupError = "The username already exists.";
+            signupError = messageService.getExistingUsernameError();
         }
 
         if(signupError == null) {
             int rowsAdded = userService.createUser(user);
             if(rowsAdded < 0) {
-                signupError = "There was an error signing you up. Please try again.";
+                signupError = messageService.getSignupError();
             }
         }
 
