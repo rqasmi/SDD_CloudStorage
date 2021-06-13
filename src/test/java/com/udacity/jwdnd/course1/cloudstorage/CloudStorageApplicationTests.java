@@ -59,8 +59,7 @@ class CloudStorageApplicationTests {
 		driver.get(baseURL + "/signup");
 		signupPage = new SignupPage(driver);
 		signupPage.signup(FIRST_NAME, LAST_NAME, USERNAME, PASSWORD);
-
-		driver.get(baseURL + "/login");
+		
 		loginPage = new LoginPage(driver);
 		loginPage.login(USERNAME, PASSWORD);
 
@@ -95,12 +94,12 @@ class CloudStorageApplicationTests {
 			homePage.createNote(NOTE_TITLE, NOTE_DESCRIPTION);
 
 			resultPage = new ResultPage(driver);
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 			assertEquals("Successfully posted note.", resultPage.getSuccessMessage());
 			resultPage.navigateToHomePage();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 			homePage.navigateToNotes();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			assertEquals(NOTE_TITLE, homePage.getNoteTitleText());
 			assertEquals(NOTE_DESCRIPTION, homePage.getNoteDescriptionText());
@@ -116,15 +115,15 @@ class CloudStorageApplicationTests {
 
 			resultPage = new ResultPage(driver);
 			resultPage.navigateToHomePage();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 			homePage.editNote(NOTE_TITLE_EDITED, NOTE_DESCRIPTION_EDITED);
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			assertEquals("Successfully updated note.", resultPage.getSuccessMessage());
 			resultPage.navigateToHomePage();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 			homePage.navigateToNotes();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			assertEquals(NOTE_TITLE_EDITED, homePage.getNoteTitleText());
 			assertEquals(NOTE_DESCRIPTION_EDITED, homePage.getNoteDescriptionText());
@@ -140,18 +139,18 @@ class CloudStorageApplicationTests {
 
 			resultPage = new ResultPage(driver);
 			resultPage.navigateToHomePage();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			homePage.deleteNote();
 
 			assertEquals("Successfully deleted note: " + NOTE_TITLE, resultPage.getSuccessMessage());
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 			resultPage.navigateToHomePage();
 			homePage = new HomePage(driver);
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			homePage.navigateToNotes();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			assertThrows(NoSuchElementException.class, () -> homePage.getNoteTitleText());
 			assertThrows(NoSuchElementException.class, () -> homePage.getNoteDescriptionText());
@@ -166,12 +165,12 @@ class CloudStorageApplicationTests {
 			homePage.addCredential(URL, CRED_USERNAME, CRED_PASSWORD);
 
 			resultPage = new ResultPage(driver);
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 			assertEquals("Successfully added credential.", resultPage.getSuccessMessage());
 			resultPage.navigateToHomePage();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 			homePage.navigateToCredentials();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			assertEquals(URL, homePage.getCredentialUrlText());
 			assertEquals(CRED_USERNAME, homePage.getCredentialUsernameText());
@@ -189,19 +188,19 @@ class CloudStorageApplicationTests {
 
 			resultPage = new ResultPage(driver);
 			resultPage.navigateToHomePage();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			homePage.viewEditCredentialModal();
 			assertEquals(CRED_PASSWORD, homePage.getCredentialPasswordInputText());
 			homePage.editCredential(URL_EDITED, CRED_USERNAME_EDITED, CRED_PASSWORD_EDITED);
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			assertEquals("Successfully updated credential.", resultPage.getSuccessMessage());
 			resultPage.navigateToHomePage();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			homePage.navigateToCredentials();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			assertEquals(URL_EDITED, homePage.getCredentialUrlText());
 			assertEquals(CRED_USERNAME_EDITED, homePage.getCredentialUsernameText());
@@ -217,18 +216,18 @@ class CloudStorageApplicationTests {
 
 			resultPage = new ResultPage(driver);
 			resultPage.navigateToHomePage();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			homePage.deleteCredential();
 
 			assertEquals("Successfully deleted credential for " + URL + " and username " + CRED_USERNAME, resultPage.getSuccessMessage());
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 			resultPage.navigateToHomePage();
 			homePage = new HomePage(driver);
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			homePage.navigateToNotes();
-			Thread.sleep(1000);
+			Thread.sleep(1500);
 
 			assertThrows(NoSuchElementException.class, () -> homePage.getCredentialUrlText());
 			assertThrows(NoSuchElementException.class, () -> homePage.getCredentialUsernameText());

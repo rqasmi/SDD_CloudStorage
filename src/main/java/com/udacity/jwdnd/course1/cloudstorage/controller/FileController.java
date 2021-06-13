@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ByteArrayResource;
@@ -59,6 +61,10 @@ public class FileController {
 
         if(!fileService.isFileNameAvailable(fileUpload.getOriginalFilename())) {
             errorMsg = "A file with the given name already exists.";
+        }
+
+        if(fileUpload.getSize() > 10485760) {
+            errorMsg = "File size exceeded allowable 10MB. Try uploading a smaller file.";
         }
 
         if(errorMsg == null) {

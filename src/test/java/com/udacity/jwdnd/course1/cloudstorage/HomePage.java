@@ -108,9 +108,9 @@ public class HomePage {
     public void createNote(String noteTitle, String noteDescription) {
         try {
             navigateToNotes();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
             addNoteBtn.click();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
             noteTitleInput.sendKeys(noteTitle);
             noteDescriptionInput.sendKeys(noteDescription);
             noteModalSaveBtn.click();
@@ -120,9 +120,9 @@ public class HomePage {
     public void editNote(String noteTitle, String noteDescription) {
         try {
             navigateToNotes();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
             editNoteBtn.click();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
             noteTitleInput.clear();
             noteTitleInput.sendKeys(noteTitle);
             noteDescriptionInput.clear();
@@ -134,7 +134,7 @@ public class HomePage {
     public void deleteNote() {
         try {
             navigateToNotes();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
             deleteNoteBtn.click();
         } catch (InterruptedException e) {}
     }
@@ -156,9 +156,9 @@ public class HomePage {
     public void addCredential(String url, String username, String password) {
         try {
             navigateToCredentials();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
             addCredentialBtn.click();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
             credUrlInput.sendKeys(url);
             credUsernameInput.sendKeys(username);
             credPasswordInput.sendKeys(password);
@@ -169,9 +169,9 @@ public class HomePage {
     public void viewEditCredentialModal() {
         try {
             navigateToCredentials();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
             editCredBtn.click();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
         } catch (InterruptedException e) {}
     }
 
@@ -188,7 +188,7 @@ public class HomePage {
     public void deleteCredential() {
         try {
             navigateToCredentials();
-            Thread.sleep(1000);
+            Thread.sleep(1500);
             deleteCredBtn.click();
         } catch (InterruptedException e) {}
     }
