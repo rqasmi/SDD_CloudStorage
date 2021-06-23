@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
+/**
+ * myBatis mapper to perform CRUD operations on USER table
+ */
 @Mapper
 public interface UserMapper {
 

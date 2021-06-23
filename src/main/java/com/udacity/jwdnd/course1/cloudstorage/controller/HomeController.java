@@ -11,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Implements a controller for the home endpoint.
+ */
 @Controller
 public class HomeController {
 
@@ -26,6 +29,14 @@ public class HomeController {
         this.encryptionService = encryptionService;
     }
 
+    /**
+     * Returns the homepage with bound elements.
+     * @param noteForm The note form.
+     * @param credential The credential form.
+     * @param authentication An object containing the currently logged in user.
+     * @param model The homepage model.
+     * @return string corresponding to home.html page
+     */
     @GetMapping("/home")
     public String getHomePage(@ModelAttribute("noteForm") NoteForm noteForm, @ModelAttribute("credential") Credential credential,
                               Authentication authentication, Model model) {

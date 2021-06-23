@@ -2,6 +2,9 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * Implements a message service to render messages for the controller
+ */
 @Service
 public class MessageService {
 

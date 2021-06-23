@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
+/**
+ * myBatis mapper to perform CRUD operations on CREDENTIAL table
+ */
 @Mapper
 public interface CredentialMapper {
 

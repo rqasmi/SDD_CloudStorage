@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+/**
+ * Implements the authentication service to authenticate users
+ * using Spring Security AuthenticationProvider
+ */
 @Service
 public class AuthenticationService implements AuthenticationProvider {
 

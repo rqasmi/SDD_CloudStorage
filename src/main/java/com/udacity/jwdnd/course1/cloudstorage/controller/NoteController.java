@@ -1,6 +1,5 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.services.MessageService;
@@ -14,6 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Implements a controller for the note API.
+ */
 @Controller
 public class NoteController {
 
@@ -25,6 +27,14 @@ public class NoteController {
         this.messageService = messageService;
     }
 
+    /**
+     * Posts information to create a new note/update an existing note in the database.
+     * @param noteForm The note form.
+     * @param model The homepage model.
+     * @param authentication Authentication object.
+     * @param redirectAttributes  Attributes to pass on to redirect page.
+     * @return string corresponding to html page
+     */
     @PostMapping("/home/note/post")
     public String postNote(@ModelAttribute("noteForm") NoteForm noteForm, Authentication authentication,
                            Model model, RedirectAttributes redirectAttributes) {
@@ -55,6 +65,14 @@ public class NoteController {
         return "redirect:/result";
     }
 
+    /**
+     * Gets the delete endpoint to delete a note from the database.
+     * @param id The note id.
+     * @param authentication The Authentication object.
+     * @param model The homepage model.
+     * @param redirectAttributes Attributes to pass on to the redirect page.
+     * @return string corresponding to the html page
+     */
     @GetMapping("/home/note/delete/{id}")
     public String deleteNote(@PathVariable("id") int id, Authentication authentication,
                              Model model, RedirectAttributes redirectAttributes) {

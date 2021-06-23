@@ -17,6 +17,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 
+/**
+ * Implements a controller for the file API.
+ */
 @Controller
 public class FileController {
 
@@ -28,6 +31,11 @@ public class FileController {
         this.messageService = messageService;
     }
 
+    /**
+     * Downloads the file with given id.
+     * @param id The file id.
+     * @return Response Entity containing file contents and metadata
+     */
     @GetMapping("/home/file/{id}")
     public ResponseEntity<Resource> downloadFile(@PathVariable("id") int id) {
         File file = fileService.getFile(id);
@@ -46,7 +54,15 @@ public class FileController {
                 .body(resource);
     }
 
-
+    /**
+     * Posts information to create a new file in the database.
+     * @param fileUpload The file to upload to the server.
+     * @param model The homepage model.
+     * @param authentication Authentication object.
+     * @param redirectAttributes  Attributes to pass on to redirect page.
+     * @throws IOException if the request fails to upload the file
+     * @return string corresponding to html page
+     */
     @PostMapping("/home/file-upload")
     public String handleFileUpload(@RequestParam("fileUpload") MultipartFile fileUpload,
                                    Authentication authentication, Model model, RedirectAttributes redirectAttributes) throws IOException {
@@ -87,6 +103,14 @@ public class FileController {
         return "redirect:/result";
     }
 
+    /**
+     * Gets the delete endpoint to delete a file from the database.
+     * @param id The file id.
+     * @param authentication The Authentication object.
+     * @param model The homepage model.
+     * @param redirectAttributes Attributes to pass on to the redirect page.
+     * @return string corresponding to the result html page
+     */
     @GetMapping("/home/delete/{id}")
     public String deleteFile(@PathVariable("id") int id, Authentication authentication,
                              Model model, RedirectAttributes redirectAttributes) {

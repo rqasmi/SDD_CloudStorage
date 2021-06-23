@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Implements a controller for the signup endpoint.
+ */
 @Controller
 @RequestMapping("/signup")
 public class SignupController {
@@ -23,11 +26,22 @@ public class SignupController {
         this.messageService = messageService;
     }
 
+    /**
+     * Gets the signup page
+     * @return string for signup.html page.
+     */
     @GetMapping()
     public String getSignupPage() {
         return "signup";
     }
 
+    /**
+     * Posts information to create a new user in the database.
+     * @param user A new user to add to the system.
+     * @param model The signup page model.
+     * @param redirectAttributes Attributes to pass on to redirect page.
+     * @return string corresponding to html page
+     */
     @PostMapping()
     public String createUser(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes) {
         String signupError = null;

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Implements a controller for the credential API.
+ */
 @Controller
 public class CredentialController {
 
@@ -23,6 +26,14 @@ public class CredentialController {
         this.messageService = messageService;
     }
 
+    /**
+     * Posts information to create a new credential/update an existing credential in the database.
+     * @param credential The credential form.
+     * @param model The home page model.
+     * @param authentication Authentication object.
+     * @param redirectAttributes  Attributes to pass on to redirect page.
+     * @return string corresponding to html page
+     */
     @PostMapping("/home/credential")
     public String addCredential(@ModelAttribute("credential") Credential credential, Model model,
                                    Authentication authentication, RedirectAttributes redirectAttributes) {
@@ -53,6 +64,14 @@ public class CredentialController {
         return "redirect:/result";
     }
 
+    /**
+     * Gets the delete endpoint to delete a credential from the database.
+     * @param id The credential id.
+     * @param authentication The Authentication object.
+     * @param model The homepage model.
+     * @param redirectAttributes Attributes to pass on to the redirect page.
+     * @return string corresponding to the html page
+     */
     @GetMapping("/home/delete/credential/{id}")
     public String deleteCredential(@PathVariable("id") int id, Authentication authentication,
                                    Model model, RedirectAttributes redirectAttributes) {
