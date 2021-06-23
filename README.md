@@ -1,5 +1,5 @@
 # Super*Duper*Drive Cloud Storage
-A virtual company, Super*Duper*Drive, is aiming to make a dent in the Cloud Storage market. They want to include personal information management features in their application. The product should have three user-facing features:
+A virtual company, Super*Duper*Drive, is aiming to make a dent in the Cloud Storage market. They want to build a web based personal storage application which includes personal information management. The product should have three user-facing features:
 
 1. **Simple File Storage:** Upload/download/remove files
 2. **Note Management:** Add/update/remove text notes
